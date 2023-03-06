@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1 class="first-scale-title">Linear Scale</h1>
+    <p class="explainer">100 different incomes represented by 100 different colors</p>
+    <div class="chart" id="heatmap1"></div>
+
+    <h1 class="second-scale-title">Quantize Scale</h1>
+    <p class="explainer">100 different incomes bucketed into low, middle, high</p>
+    <div class="chart" id="heatmap2"></div>
+
+    <h1 class="third-scale-title">Quantile Scale</h1>
+    <p class="explainer">100 different incomes bucketed into 33 lowest, 33 middle, 34 highest</p>
+    <div class="chart" id="heatmap3"></div>
+
+    <h1 class="fourth-scale-title">Threshold Scale</h1>
+    <p class="explainer">100 different incomes bucketed by thresholds I choose</p>
+    <div class="chart" id="heatmap4"></div>
+
+    <script src="https://d3js.org/d3.v7.js" charset="utf-8" defer></script>
+    <script src="app.js" defer></script>
+
+</body>
+
+</html>

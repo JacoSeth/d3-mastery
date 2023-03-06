@@ -1,0 +1,20 @@
+h1,
+p {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    font-weight: 400;
+}
+
+h1:not(:first-child) {
+    margin-top: 50px;
+}
+
+.chart {
+    width: 600px;
+    height: 150px;
+    background-color: #dadada;
+    margin: 25px auto;
+}
