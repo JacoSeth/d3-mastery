@@ -35,13 +35,24 @@ async function drawScatterPlot() {
 
     // Scales
     const cxScale = d3.scaleLinear()
+        // domain of the scale is the min & max values of the datapoints in cyAccessor
         .domain(d3.extent(dataset, cxAccessor))
-        .rangeRound([10, dimensions.ctrWidth])
+        // round the range to the nearest whole number (no decimals)
+        .rangeRound([0, dimensions.ctrWidth])
+        // prevent new data from being plotted outside the bounds of the container
+        .clamp(true)
 
     const cyScale = d3.scaleLinear()
+        // domain of the scale is the min & max values of the datapoints in cyAccessor
         .domain(d3.extent(dataset, cyAccessor))
-        .rangeRound([10, dimensions.ctrHeight])
+        // round the range to the nearest whole number (no decimals)
+        // since y needs to be inverted to display low numbers at the base of the chart, always make sure the 
+        // max y value is placed first inside rangeRound() argument
+        .rangeRound([dimensions.ctrHeight, 0])
+        // round the range of the y-scale to nearest decimals
         .nice()
+        // prevent new data from being plotted outside the bounds of the container
+        .clamp(true)
 
     container.selectAll('circle')
         .data(dataset)
@@ -51,6 +62,7 @@ async function drawScatterPlot() {
         // dependendent variable (effect) is plotted on the y-axis
         .attr('cx', d => cxScale(cxAccessor(d)))
         .attr('cy', d => cyScale(cyAccessor(d)))
+        .attr('data-temp', cyAccessor)
         // circles won't show until we add r attribute
         .attr('r', 5)
         .attr('fill', 'green')
@@ -60,7 +72,50 @@ async function drawScatterPlot() {
         .attr('stroke-opacity', '1.0')
         .attr('stroke-alignment', 'outer')
 
+    // Define an axis using the scale and d3.axisBottom() or d3.axisTop() functions
+    const xAxis = d3.axisBottom(cxScale)
+        .ticks(5)
+        .tickFormat(d => d * 100 + '%')
+
+    // Create a new group to host the axis lines, shapes, and text
+    const xAxisGroup = container.append('g')
+        .call(xAxis)
+        // Since the axis is on the top by default, move the axis to the bottom
+        .style('transform', `translateY(${dimensions.ctrHeight}px)`)
+        // Add a class so we can edit text with CSS
+        .classed('axis', true)
+
+    // Add text to the x-axis
+    xAxisGroup.append('text')
+        // Center the text anchor
+        .attr('x', dimensions.ctrWidth / 2)
+        // Place text 10px below bottom of container
+        .attr('y', dimensions.margin.bottom - 10)
+        // select color
+        .attr('fill', 'black')
+        // Set actual text value
+        .text('Humidity')
+        // Make the text anchor the middle of the text element
+        .style('text-anchor', 'middle')
+
+    const yAxis = d3.axisLeft(cyScale)
+
+    const yAxisGroup = container.append('g')
+        .call(yAxis)
+        // .style("transform", `translateX(${dimensions.ctrWidth}px)`)
+        .classed('axis', true)
+
+    yAxisGroup.append("text")
+        .attr("x", -dimensions.ctrHeight / 2)
+        .attr("y", -dimensions.margin.left + 15)
+        .attr("fill", "black")
+        .html("Temperature (&deg;F)")
+        .style("transform", "rotate(270deg)")
+        .style("text-anchor", "end")
+
 }
+
+
 
 
 drawScatterPlot()
