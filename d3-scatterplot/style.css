@@ -1,9 +1,15 @@
-#chart {
+.chart {
     width: 800px;
     height: 800px;
-    background-color: #f7f7f7;
+    background-color: #f0f0f0;
     margin: 25px auto;
     position: relative
+}
+
+.axis {
+    font-size: 18px;
+    /* Add shape rendering to improve quality of our axis */
+    shape-rendering: geometricPrecision;
 }
 
 #tooltip {
