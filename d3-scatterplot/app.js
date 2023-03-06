@@ -36,11 +36,12 @@ async function drawScatterPlot() {
     // Scales
     const cxScale = d3.scaleLinear()
         .domain(d3.extent(dataset, cxAccessor))
-        .range([10, dimensions.ctrWidth])
+        .rangeRound([10, dimensions.ctrWidth])
 
     const cyScale = d3.scaleLinear()
         .domain(d3.extent(dataset, cyAccessor))
-        .range([10, dimensions.ctrHeight])
+        .rangeRound([10, dimensions.ctrHeight])
+        .nice()
 
     container.selectAll('circle')
         .data(dataset)
@@ -52,7 +53,7 @@ async function drawScatterPlot() {
         .attr('cy', d => cyScale(cyAccessor(d)))
         // circles won't show until we add r attribute
         .attr('r', 5)
-        .attr('fill', 'purple')
+        .attr('fill', 'green')
         .attr('fill-opacity', '35%')
         .attr('stroke', 'black')
         .attr('stroke-width', 2)
