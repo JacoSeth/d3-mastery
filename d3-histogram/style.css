@@ -1,0 +1,29 @@
+body {
+    background-color: #f7f7f7;
+}
+
+.chart {
+    margin: 25px auto;
+    width: 800px;
+    background-color: rgb(230, 230, 230);
+    border-left: 2px solid grey;
+    border-radius: 0px 23px 23px 0px;
+}
+
+.bar-labels {
+    text-anchor: middle;
+    font-size: 16px;
+    font-family: sans-serif;
+}
+
+select {
+    margin: 25px auto 0;
+    display: block;
+    font-size: 20px;
+}
+
+.mean-line {
+    stroke: #d62828;
+    stroke-dasharray: 6;
+    stroke-width: 2px;
+}
