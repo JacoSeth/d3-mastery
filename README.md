@@ -2,4 +2,9 @@
 master the d3 library for data visualizations
 
 1. intro-SVG: practice drawing basic shapes & paths
+2. d3-scatterplot: Basic d3 visualization
+3. d3-heamap: heatmaps displaying different scales
+4. d3-log: logarythmic scales 
+5. d3-histogram: basic histogram
+6. d3- updated histogram to take many metrics
 
