@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>NYC Temp</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+    <select id="metric">
+        <option value="humidity" selected>Humidity</option>
+        <option value="temperature">Temperature</option>
+        <option value="dewPoint">Dew Point</option>
+        <option value="windSpeed">Wind Speed</option>
+        <option value="cloudCover">Cloud Cover</option>
+        <option value="ozone">Ozone</option>
+    </select>
+
+    <div class="chart"></div>
+
+
+    <script src="https://d3js.org/d3.v7.js" charset="utf-8" defer></script>
+    <script src="app.js" defer></script>
+
+</body>
+
+</html>
