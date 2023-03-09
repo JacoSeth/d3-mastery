@@ -62,10 +62,27 @@ async function draw() {
             .range([dimensions.ctrHeight, 0])
             .nice()
 
+        // Storing a transtition to be called later
+        const exitTransition = d3.transition().duration(500)
+
         // Draw Bars
         ctr.selectAll('rect')
             .data(newDataSet)
-            .join('rect')
+            .join(
+                (enter) => enter.append('rect')
+                .attr('width', d => d3.max([0, xScale(d.x1) - xScale(d.x0) - padding]))
+                .attr("height", 0)
+                .attr('x', d => xScale(d.x0))
+                .attr("y", dimensions.ctrHeight)
+                .attr('fill', '#01c5c4'),
+                (update) => update,
+                (exit) => exit.transition(exitTransition)
+                .attr('y', dimensions.ctrHeight)
+                .attr('height', 0)
+                .remove()
+            )
+            .transition()
+            .duration(2000)
             .attr('width', d => d3.max([0, xScale(d.x1) - xScale(d.x0) - padding]))
             // height: find starting point by taking container height and subtracting the height of the bar.
             // then from that point, draw down to fill the chart until it hits zero
@@ -79,6 +96,7 @@ async function draw() {
         labelsGroup.selectAll('text')
             .data(newDataSet)
             .join('text')
+            .transition()
             // for each text, the x-coordinate equals x0 + (x1 -x0) / 2 (center of the bar)
             // first x0 indicates the starting point for each bar. Then the second equation 
             // (x1 - x0)/2 plots the middle of the rect
@@ -89,7 +107,8 @@ async function draw() {
         // Adding an axis
         const xAxis = d3.axisBottom(xScale)
 
-        xAxisGroup.call(xAxis)
+        xAxisGroup.transition()
+            .call(xAxis)
 
     }
 
