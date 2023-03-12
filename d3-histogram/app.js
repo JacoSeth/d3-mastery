@@ -82,7 +82,7 @@ async function draw() {
                 .remove()
             )
             .transition()
-            .duration(2000)
+            .duration(1500)
             .attr('width', d => d3.max([0, xScale(d.x1) - xScale(d.x0) - padding]))
             // height: find starting point by taking container height and subtracting the height of the bar.
             // then from that point, draw down to fill the chart until it hits zero
@@ -97,6 +97,7 @@ async function draw() {
             .data(newDataSet)
             .join('text')
             .transition()
+            .duration(2000)
             // for each text, the x-coordinate equals x0 + (x1 -x0) / 2 (center of the bar)
             // first x0 indicates the starting point for each bar. Then the second equation 
             // (x1 - x0)/2 plots the middle of the rect
