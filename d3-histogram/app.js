@@ -119,6 +119,8 @@ async function draw() {
         histogram(this.value)
     })
 
+    // call histogram
+
     histogram('humidity')
 }
 
