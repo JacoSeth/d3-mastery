@@ -64,6 +64,7 @@ async function draw() {
 
         // Storing a transtition to be called later
         const exitTransition = d3.transition().duration(500)
+        const updateTransition = d3.transition()
 
         // Draw Bars
         ctr.selectAll('rect')
@@ -74,9 +75,10 @@ async function draw() {
                 .attr("height", 0)
                 .attr('x', d => xScale(d.x0))
                 .attr("y", dimensions.ctrHeight)
-                .attr('fill', '#01c5c4'),
+                .attr('fill', '#b8de6f'),
                 (update) => update,
-                (exit) => exit.transition(exitTransition)
+                (exit) => exit.attr('fill', 'maroon')
+                .transition(exitTransition)
                 .attr('y', dimensions.ctrHeight)
                 .attr('height', 0)
                 .remove()
@@ -95,8 +97,17 @@ async function draw() {
         // Adding Labels
         labelsGroup.selectAll('text')
             .data(newDataSet)
-            .join('text')
-            .transition()
+            .join(
+                enter => enter.append('text')
+                .attr("x", d => xScale(d.x0) + (xScale(d.x1) - xScale(d.x0)) / 2)
+                .attr("y", dimensions.ctrHeight)
+                .text(yAccessor),
+                update => update,
+                exit => exit.transition(exitTransition)
+                .attr("y", dimensions.ctrHeight)
+                .remove()
+            )
+            .transition(updateTransition)
             .duration(2000)
             // for each text, the x-coordinate equals x0 + (x1 -x0) / 2 (center of the bar)
             // first x0 indicates the starting point for each bar. Then the second equation 
@@ -110,6 +121,19 @@ async function draw() {
 
         xAxisGroup.transition()
             .call(xAxis)
+
+        // Draw Mean Line
+        const meanLine = ctr.append('line')
+            .classed('mean-line', true)
+
+        const mean = d3.mean(dataset, xAccessor)
+
+        meanLine.raise()
+            .transition(updateTransition)
+            .attr("x1", xScale(mean))
+            .attr("y1", 0)
+            .attr("x2", xScale(mean))
+            .attr("y2", dimensions.ctrHeight)
 
     }
 
