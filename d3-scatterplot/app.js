@@ -32,6 +32,7 @@ async function drawScatterPlot() {
             `translate (${dimensions.margin.left}, ${dimensions.margin.top})`
         )
 
+    const tooltip = d3.select('#tooltip')
 
     // Scales
     const cxScale = d3.scaleLinear()
@@ -71,6 +72,22 @@ async function drawScatterPlot() {
         .attr('stroke-width', 2)
         .attr('stroke-opacity', '1.0')
         .attr('stroke-alignment', 'outer')
+        .on('mouseenter', function(e, datum) {
+            d3.select(this)
+                .attr('fill', '#120078')
+                .attr('r', 10)
+
+            tooltip.style('display', 'block')
+                .style('top', cyScale(cyAccessor(datum)) - 25 + 'px')
+                .style('left', cxScale(cxAccessor(datum)) + 'px')
+        })
+        .on('mouseleave', function(e, datum) {
+            d3.select(this)
+                .attr('fill', 'green')
+                .attr('r', 5)
+
+            tooltip.style('display', 'none')
+        })
 
     // Define an axis using the scale and d3.axisBottom() or d3.axisTop() functions
     const xAxis = d3.axisBottom(cxScale)
