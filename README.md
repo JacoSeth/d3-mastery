@@ -8,4 +8,5 @@ master the d3 library for data visualizations
 5. d3-histogram: basic histogram
 6. d3-histogram: updated histogram to take many metrics
 7. d3-histogram: updated histogram with transition colors and mean line
+8. d3-histogram: updated exitTransition()
 
