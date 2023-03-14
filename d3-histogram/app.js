@@ -64,7 +64,7 @@ async function draw() {
 
         // Storing a transtition to be called later
         const exitTransition = d3.transition().duration(500)
-        const updateTransition = d3.transition()
+        const updateTransition = exitTransition.transition().duration(500)
 
         // Draw Bars
         ctr.selectAll('rect')
