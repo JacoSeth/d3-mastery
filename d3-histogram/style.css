@@ -23,7 +23,7 @@ select {
 }
 
 .mean-line {
-    stroke: #d62828;
+    stroke: #ed0e0e;
     stroke-dasharray: 6;
     stroke-width: 2px;
 }

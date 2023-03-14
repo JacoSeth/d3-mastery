@@ -128,6 +128,7 @@ async function draw() {
 
         const mean = d3.mean(dataset, xAccessor)
 
+        // Draw the mean line with the x,y coordinates
         meanLine.raise()
             .transition(updateTransition)
             .attr("x1", xScale(mean))

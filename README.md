@@ -6,5 +6,6 @@ master the d3 library for data visualizations
 3. d3-heamap: heatmaps displaying different scales
 4. d3-log: logarythmic scales 
 5. d3-histogram: basic histogram
-6. d3- updated histogram to take many metrics
+6. d3-histogram: updated histogram to take many metrics
+7. d3-histogram: updated histogram with transition colors and mean line
 
