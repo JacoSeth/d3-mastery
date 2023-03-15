@@ -1,3 +1,7 @@
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
 .chart {
     width: 800px;
     height: 800px;
@@ -12,15 +16,18 @@
     shape-rendering: geometricPrecision;
 }
 
-#tooltip {
+.tooltip {
     text-align: center;
     border: 1px solid #ccc;
+    border-radius: 7px;
     position: absolute;
     padding: 10px;
     background-color: #fff;
     display: none;
+    font-size: 14px;
+    font-stretch: semi-expanded;
 }
 
-#tooltip .metric-date {
-    text-decoration: underline;
+.tooltip .metric-date {
+    font-weight: 600;
 }

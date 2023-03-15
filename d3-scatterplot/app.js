@@ -32,7 +32,7 @@ async function drawScatterPlot() {
             `translate (${dimensions.margin.left}, ${dimensions.margin.top})`
         )
 
-    const tooltip = d3.select('#tooltip')
+    const tooltip = d3.select(".tooltip")
 
     // Scales
     const cxScale = d3.scaleLinear()
@@ -72,22 +72,6 @@ async function drawScatterPlot() {
         .attr('stroke-width', 2)
         .attr('stroke-opacity', '1.0')
         .attr('stroke-alignment', 'outer')
-        .on('mouseenter', function(e, datum) {
-            d3.select(this)
-                .attr('fill', '#120078')
-                .attr('r', 10)
-
-            tooltip.style('display', 'block')
-                .style('top', cyScale(cyAccessor(datum)) - 25 + 'px')
-                .style('left', cxScale(cxAccessor(datum)) + 'px')
-        })
-        .on('mouseleave', function(e, datum) {
-            d3.select(this)
-                .attr('fill', 'green')
-                .attr('r', 5)
-
-            tooltip.style('display', 'none')
-        })
 
     // Define an axis using the scale and d3.axisBottom() or d3.axisTop() functions
     const xAxis = d3.axisBottom(cxScale)
@@ -129,6 +113,71 @@ async function drawScatterPlot() {
         .html("Temperature (&deg;F)")
         .style("transform", "rotate(270deg)")
         .style("text-anchor", "end")
+
+    // By drawing a Voronoi diagram overlaying our data, we can assist with the hover so the tooltip
+    // will show even when we are not directly over the dot. The effect is that the tooltip
+    // will always show somewhere while hovering over the container
+
+
+    // Begin by defining the d3.Delaunay library, attach the dataset, and set the x/y coordinates
+    // output is coordinate set from which we can draw our own, or d3 will draw it for us
+    const delaunay = d3.Delaunay.from(
+        dataset,
+        d => cxScale(cxAccessor(d)),
+        d => cyScale(cyAccessor(d))
+    )
+
+    // Tell d3 to draw it for us because f* that ish
+    const voronoi = delaunay.voronoi()
+    voronoi.xmax = dimensions.ctrWidth
+    voronoi.ymax = dimensions.ctrHeight
+
+    // Draw the paths, add the hover commands that were previously on the dots
+    container.append('g')
+        .selectAll('path')
+        .data(dataset)
+        .join('path')
+        // .attr('stroke', 'black')
+        .attr('fill', 'transparent')
+        .attr('d', (d, i) => voronoi.renderCell(i))
+        .on('mouseenter', function(e, datum) {
+            // Voronoi is good, but now we can't hover the dots anymore. to fix that, we'll draw new dots on top of the old ones
+            container.append('circle')
+                .classed('dot-hovered', true)
+                .attr('fill', 'green')
+                .attr('r', 10)
+                // .attr('fill-opacity', '35%')
+                .attr('stroke', 'black')
+                .attr('stroke-width', 2)
+                .attr('stroke-opacity', '1.0')
+                .attr('stroke-alignment', 'outer')
+                .attr('cx', cxScale(cxAccessor(datum)))
+                .attr('cy', cyScale(cyAccessor(datum)))
+                .style('pointer-events', 'none')
+
+            tooltip.style('display', 'block')
+                .style('top', cyScale(cyAccessor(datum)) - 50 + 'px')
+                .style('left', cxScale(cxAccessor(datum)) - 50 + 'px')
+
+            const tempFormatter = d3.format('.2f')
+            const humidFormatter = d3.format('.0%')
+            const dateFormatter = d3.timeFormat('%B %-d, %Y')
+
+            tooltip.select('.metric-humidity span')
+                .text(humidFormatter(cxAccessor(datum)))
+
+            tooltip.select('.metric-temp span')
+                .text(tempFormatter(cyAccessor(datum)))
+
+            tooltip.select('.metric-date')
+                .text(dateFormatter(datum.currently.time * 1000))
+
+        })
+        .on('mouseleave', function() {
+            d3.select(".dot-hovered").remove()
+
+            tooltip.style('display', 'none')
+        })
 
 }
 
