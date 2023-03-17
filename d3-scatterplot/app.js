@@ -13,8 +13,8 @@ async function drawScatterPlot() {
         margin: {
             top: 50,
             bottom: 50,
-            right: 50,
-            left: 50
+            left: 50,
+            right: 50
         }
     }
 
@@ -180,8 +180,5 @@ async function drawScatterPlot() {
         })
 
 }
-
-
-
 
 drawScatterPlot()
