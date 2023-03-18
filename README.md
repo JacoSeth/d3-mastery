@@ -10,4 +10,5 @@ master the d3 library for data visualizations
 7. d3-histogram: updated histogram with transition colors and mean line
 8. d3-histogram: updated exitTransition()
 9. Other types of charts- To be added asap
+10. Last commit for d3 histogram
 
