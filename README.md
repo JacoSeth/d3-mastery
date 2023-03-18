@@ -9,4 +9,5 @@ master the d3 library for data visualizations
 6. d3-histogram: updated histogram to take many metrics
 7. d3-histogram: updated histogram with transition colors and mean line
 8. d3-histogram: updated exitTransition()
+9. Other types of charts
 
