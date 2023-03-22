@@ -24,6 +24,11 @@ async function draw() {
         .domain(d3.extent(dataset, price))
         .range([containerHeight, 0])
         .nice()
+
+    const xScale = d3.scaleLinear()
+        .domain(d3.extent(dataset, date))
+        .range([0, containerWidth])
+        .nice()
 }
 
 draw()
