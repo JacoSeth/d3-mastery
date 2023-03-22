@@ -1,7 +1,9 @@
 async function draw() {
     const dataset = await d3.csv('data.csv')
-    const date = d => d.date
-    const price = d => d.close
+
+    const parseDate = d3.timeParse("%Y-%m-%d")
+    const date = d => parseDate(d.date)
+    const price = d => parseDate(d.close)
 
     let dimensions = {
         width: 1000,
@@ -25,10 +27,25 @@ async function draw() {
         .range([containerHeight, 0])
         .nice()
 
-    const xScale = d3.scaleLinear()
+
+    // Using scaleUtc to convert a datetime obj to utc time 
+    const xScale = d3.scaleUtc()
         .domain(d3.extent(dataset, date))
         .range([0, containerWidth])
         .nice()
+
+    // Creating a line generator to draw the data from our line
+    const lineGenerator = d3.line()
+        .x(d => xScale(date(d)))
+        .y(d => yScale(price(d)))
+
+    container.append("path")
+        .datum(dataset)
+        .attr("d", lineGenerator)
+        .attr("fill", "none")
+        .attr("stroke", "#30475e")
+        .attr("stroke-width", 2)
 }
+
 
 draw()
