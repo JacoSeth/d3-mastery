@@ -29,10 +29,10 @@ async function draw() {
 
 
     // Using scaleUtc to convert a datetime obj to utc time 
-    const xScale = d3.scaleUtc()
-        .domain(d3.extent(dataset, date))
-        .range([0, containerWidth])
-        .nice()
+    // const xScale = d3.scaleUtc()
+    //     .domain(d3.extent(dataset, date))
+    //     .range([0, containerWidth])
+    //     .nice()
 
     // Creating a line generator to draw the data from our line
     const lineGenerator = d3.line()
