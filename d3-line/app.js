@@ -19,14 +19,14 @@ async function draw() {
         .attr('width', containerWidth)
         .attr('height', containerHeight)
 
-    // const container = svg.append('g')
-    //     .attr('transform',
-    //         `translate(${dimensions.margins}, ${dimensions.margins})`)
+    const container = svg.append('g')
+        .attr('transform',
+            `translate(${dimensions.margins}, ${dimensions.margins})`)
 
-    // const yScale = d3.scaleLinear()
-    //     .domain(d3.extent(dataset, price))
-    //     .range([containerHeight, 0])
-    //     .nice()
+    const yScale = d3.scaleLinear()
+        .domain(d3.extent(dataset, price))
+        .range([containerHeight, 0])
+        .nice()
 
 
     // Using scaleUtc to convert a datetime obj to utc time 
