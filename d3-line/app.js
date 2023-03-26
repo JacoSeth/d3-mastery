@@ -16,8 +16,8 @@ async function draw() {
 
     const svg = d3.select('#chart')
         .append('svg')
-        .attr('width', containerWidth)
-        .attr('height', containerHeight)
+        .attr('width', dimensions.width)
+        .attr('height', dimensions.height)
 
     const container = svg.append('g')
         .attr('transform',
@@ -53,26 +53,12 @@ async function draw() {
 
     container.append('g').call(yAxis)
 
-    // yAxisGroup.append('text')
-    //     .attr('x', -containerHeight / 2)
-    //     .attr('y', -40)
-    //     .attr('fill', 'black')
-    //     .html('Price USD')
-    //     .style('transform', 'rotate(270deg')
-    //     .style('text-anchor', 'end')
-
     const xAxis = d3.axisBottom(xScale)
 
-    xAxisGroup = container.append('g')
+    container.append('g')
         .call(xAxis)
-        .classed('axis', true)
+        .style('transform', `translateY(${containerHeight}px)`)
 
-    xAxisGroup.append('text')
-        .attr('x', containerWidth / 2)
-        .attr('y', -containerHeight - 40)
-        .html('Closing Date')
-        .style('fill', 'black')
-        .style('text-anchor', 'end')
 }
 
 
