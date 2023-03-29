@@ -31,6 +31,15 @@ async function draw() {
         .value(d => d.value)
     const slices = populationPie(dataset)
 
+    const colors = d3.quantize(
+        d3.interpolateSpectral,
+        dataset.length
+    )
+
+    const colorScale = d3.scaleOrdinal()
+        .domain(dataset.map(element => element.category))
+        .range(colors)
+
     const arc = d3.arc()
         .outerRadius(radius)
         .innerRadius(0)
@@ -46,6 +55,7 @@ async function draw() {
         .data(slices)
         .join('path')
         .attr('d', arc)
+        .attr('fill', d => colorScale(d.data.category))
 
 }
 
