@@ -59,6 +59,39 @@ async function draw() {
         .call(xAxis)
         .style('transform', `translateY(${containerHeight}px)`)
 
+    const tooltip = d3.select('#tooltip')
+
+    const tooltipDot = container.append('circle')
+        .attr('r', 5)
+        .attr('fill', '#fc8781')
+        .attr('stroke', 'black')
+        .attr('stroke-width', 2)
+        .style('opacity', 0)
+        .style('pointer-events', 'none')
+
+    container.append('rect')
+        .style('opacity', 0)
+        .attr('width', containerWidth)
+        .attr('height', containerHeight)
+        .on('touchmouse mousemove', function(event) {
+            const mousePos = d3.pointer(event, this)
+            const ydate = xScale.invert(mousePos[0])
+
+            // Custom bisector function
+            const stockBisect = d3.bisector(date).left
+            const index = stockBisect(dataset, ydate)
+            const stock = dataset[index - 1]
+
+            // Update tooltip dot
+            tooltipDot.style('opacity', 1)
+                .attr('cx', xScale(date(stock)))
+                .attr('cy', yScale(price(stock)))
+                .raise()
+        })
+        .on('mouseleave', function(event) {
+
+        })
+
 }
 
 
