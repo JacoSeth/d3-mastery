@@ -57,6 +57,27 @@ async function draw() {
         .attr('d', arc)
         .attr('fill', d => colorScale(d.data.category))
 
+    const labelsGroup = ctr.append('g')
+        .attr(
+            'transform',
+            `(${dimensions.ctrHeight /2}, ${dimensions.ctrWidth / 2})`
+        )
+        .classed('labels', true)
+
+    labelsGroup.selectAll('text')
+        .data(slices)
+        .join('text')
+        .attr('transform', d => `translate(${arc.centroid(d)})`)
+        .call(
+            text => text.append('tspan')
+            .attr('font-weight', 'bold')
+            .text(d => d.data.category)
+        )
+        .call(
+            text => text.append('tspan')
+            .text(d => d.data.value)
+        )
+
 }
 
 draw()
