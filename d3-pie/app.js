@@ -29,6 +29,8 @@ async function draw() {
     // Scales
     const populationPie = d3.pie()
         .value(d => d.value)
+        .sort(null)
+
     const slices = populationPie(dataset)
 
     const colors = d3.quantize(
@@ -43,6 +45,10 @@ async function draw() {
     const arc = d3.arc()
         .outerRadius(radius)
         .innerRadius(0)
+
+    const arcLabels = d3.arc()
+        .outerRadius(radius)
+        .innerRadius(200)
 
     const arcsGroup = ctr.append('g')
         // Position the pie chart center at the center of the svg
@@ -60,21 +66,25 @@ async function draw() {
     const labelsGroup = ctr.append('g')
         .attr(
             'transform',
-            `(${dimensions.ctrHeight /2}, ${dimensions.ctrWidth / 2})`
+            `translate(${dimensions.ctrHeight / 2}, ${dimensions.ctrWidth / 2})`
         )
         .classed('labels', true)
 
     labelsGroup.selectAll('text')
         .data(slices)
         .join('text')
-        .attr('transform', d => `translate(${arc.centroid(d)})`)
+        .attr('transform', d => `translate(${arcLabels.centroid(d)})`)
         .call(
             text => text.append('tspan')
+            .attr('y', -4)
             .attr('font-weight', 'bold')
             .text(d => d.data.category)
         )
         .call(
-            text => text.append('tspan')
+            text => text.filter(d => (d.endAngle - d.startAngle > 0.25))
+            .append('tspan')
+            .attr('x', 0)
+            .attr('y', 9)
             .text(d => d.data.value)
         )
 

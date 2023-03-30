@@ -1,10 +1,13 @@
 async function draw() {
+    // Load data from local source
     const dataset = await d3.csv('data.csv')
 
+    // Using timeParse to handle datetime objs
     const parseDate = d3.timeParse("%Y-%m-%d")
     const date = d => parseDate(d.date)
     const price = d => parseInt(d.close)
 
+    // Dimensions for container
     let dimensions = {
         width: 1000,
         height: 500,
@@ -20,20 +23,31 @@ async function draw() {
         .attr('height', dimensions.height)
 
     const container = svg.append('g')
-        .attr('transform',
-            `translate(${dimensions.margins}, ${dimensions.margins})`)
+        .attr(
+            'transform',
+            `translate(${dimensions.margins}, ${dimensions.margins})`
+        )
+
+    const tooltip = d3.select('#tooltip')
+
+    const tooltipDot = container.append('circle')
+        .attr('r', 5)
+        .attr('fill', '#fc8781')
+        .attr('stroke', 'black')
+        .attr('stroke-width', 2)
+        .style('opacity', 0)
+        .style('pointer-events', 'none')
+
+    // Scales
 
     const yScale = d3.scaleLinear()
         .domain(d3.extent(dataset, price))
         .range([containerHeight, 0])
         .nice()
 
-
-    // Using scaleUtc to convert a datetime obj to utc time 
     const xScale = d3.scaleTime()
         .domain(d3.extent(dataset, date))
         .range([0, containerWidth])
-        .nice()
 
     // Creating a line generator to draw the data from our line
     const lineGenerator = d3.line()
@@ -47,6 +61,14 @@ async function draw() {
         .attr("stroke", "#30475e")
         .attr("stroke-width", 2)
 
+    // container.append("line")
+    //     .attr("x1", xScale(date(stock)))
+    //     .attr("y1", 0)
+    //     .attr("x2", xScale(mean))
+    //     .attr("y2", dimensions.ctrHeight)
+
+
+
     // Adding the axis
     const yAxis = d3.axisLeft(yScale)
         .tickFormat(d => `$${d}`)
@@ -58,16 +80,6 @@ async function draw() {
     container.append('g')
         .call(xAxis)
         .style('transform', `translateY(${containerHeight}px)`)
-
-    const tooltip = d3.select('#tooltip')
-
-    const tooltipDot = container.append('circle')
-        .attr('r', 5)
-        .attr('fill', '#fc8781')
-        .attr('stroke', 'black')
-        .attr('stroke-width', 2)
-        .style('opacity', 0)
-        .style('pointer-events', 'none')
 
     container.append('rect')
         .style('opacity', 0)
@@ -82,6 +94,18 @@ async function draw() {
             const index = stockBisect(dataset, ydate)
             const stock = dataset[index - 1]
 
+            tooltip.style('display', 'block')
+                .style('top', `${yScale(price(stock))-20}px`)
+                .style('left', `${xScale(date(stock))}px`)
+
+            tooltip.select('.price')
+                .text(`$${price(stock)}`)
+
+            const dateFormatter = d3.timeFormat('%-d %B, %Y')
+
+            tooltip.select('.date')
+                .text(dateFormatter(date(stock)))
+
             // Update tooltip dot
             tooltipDot.style('opacity', 1)
                 .attr('cx', xScale(date(stock)))
@@ -89,7 +113,8 @@ async function draw() {
                 .raise()
         })
         .on('mouseleave', function(event) {
-
+            tooltipDot.style('opacity', 0)
+            tooltip.style('display', 'none')
         })
 
 }
