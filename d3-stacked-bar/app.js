@@ -1,10 +1,14 @@
 async function draw() {
     // Data
-    const dataset = await d3.csv('data.csv', (d) => {
+    const dataset = await d3.csv('data.csv', (d, i, columns) => {
         d3.autoType(d)
-
+            // sort columns by state name
+        d.total = d3.sum(columns, c => d[c])
         return d
     })
+
+    // Sort cols greatest to least
+    dataset.sort((a, b) => b.total - a.total)
 
     // Dimensions
     let dimensions = {
@@ -29,8 +33,6 @@ async function draw() {
         )
 
     // Scales
-
-    // getting the data to stack, and using the keys function to assign the key categories
     const stackGenerator = d3.stack()
         .keys(dataset.columns.slice(1))
 
@@ -39,43 +41,52 @@ async function draw() {
         return ageGroup
     })
 
-    // create yScale
     const yScale = d3.scaleLinear()
-        // for domain, we need the largest number in the dataset. So we are finding the largest number in each of 9 categories, 
-        // then comparing them to eachother to find the largest overall
         .domain([
             0, d3.max(stackData, ag => d3.max(ag, s => s[1]))
         ])
-        // Range equals the height of the container minus the margins
         .rangeRound([dimensions.ctrHeight, dimensions.margins])
 
     const xScale = d3.scaleBand()
         .domain(dataset.map(state => state.name))
         .range([dimensions.margins, dimensions.ctrWidth])
+        .paddingInner(0.1)
+        .paddingOuter(0.1)
 
-    // Color Scale 
     const colorScale = d3.scaleOrdinal()
         .domain(stackData.map(d => d.key))
         .range(d3.schemeSpectral[stackData.length])
         .unknown("#ccc")
 
     // Draw Bars
-    const ageGroups = ctr.append('g')
+    const ageGroups = ctr.append("g")
         .classed('age-groups', true)
-        .selectAll('g')
+        .selectAll("g")
         .data(stackData)
-        .join('g')
+        .join("g")
         .attr("fill", d => colorScale(d.key))
 
-
-    // Complicated shape join for bars 
-    ageGroups.selectAll('rect')
+    ageGroups.selectAll("rect")
         .data(d => d)
-        .join('rect')
-        .attr('x', d => xScale(d.data.name))
-        .attr('y', d => yScale(d[1]))
-        .attr('height', d => yScale(d[0] - yScale(d[1])))
-        .attr('width', xScale.bandwidth())
+        .join("rect")
+        .attr("x", d => xScale(d.data.name))
+        .attr("y", d => yScale(d[1]))
+        .attr("height", d => yScale(d[0]) - yScale(d[1]))
+        .attr("width", xScale.bandwidth())
+
+    // Draw Axis
+    const xAxis = d3.axisBottom(xScale)
+        .tickSizeOuter(0)
+    const yAxis = d3.axisLeft(yScale)
+        .ticks(null, "s")
+
+    ctr.append('g')
+        .attr("transform", `translate(0,${dimensions.ctrHeight})`)
+        .call(xAxis)
+
+    ctr.append('g')
+        .attr("transform", `translate(${dimensions.margins}, 0)`)
+        .call(yAxis)
 }
 
 draw()
